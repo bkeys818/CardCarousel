@@ -4,9 +4,9 @@ import SwiftUI
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-struct LibraryViewContent: LibraryContentProvider {
+public struct LibraryViewContent: LibraryContentProvider {
     @LibraryContentBuilder
-    var views: [LibraryItem] { [
+    public var views: [LibraryItem] { [
         LibraryItem(
             Card({ EmptyView() }),
             title: "Carousel Card",
@@ -26,12 +26,12 @@ struct LibraryViewContent: LibraryContentProvider {
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-struct Card: View {
+public struct Card: View {
     private var content: AnyView
     public init<Content:View>(_ content: () -> Content) {
         self.content = AnyView(content())
     }
-    var body: some View {
+    public var body: some View {
         ZStack(alignment: . center) {
             Color(UIColor.systemBackground)
             content
