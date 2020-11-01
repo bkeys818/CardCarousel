@@ -157,7 +157,7 @@ public struct Carousel: View {
             }
         }
     }
-    @_functionBuilder struct CarouselViewBuilder {
+    @_functionBuilder public struct CarouselViewBuilder {
         public static func buildBlock(_ segments: Card...) -> [Card] {
             var array = [Card]()
             segments.forEach { array.append($0) }
