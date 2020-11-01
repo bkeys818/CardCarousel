@@ -4,7 +4,7 @@ import SwiftUI
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-public struct LibraryViewContent: LibraryContentProvider {
+struct LibraryViewContent: LibraryContentProvider {
     @LibraryContentBuilder
     public var views: [LibraryItem] { [
         LibraryItem(
@@ -46,7 +46,7 @@ public struct Card: View {
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
-struct Carousel: View {
+public struct Carousel: View {
     private var cards: [Card]
     @GestureState private var dragState = DragState.inactive
     @State private var carouselLocation = 0
@@ -65,7 +65,7 @@ struct Carousel: View {
         }
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack{
             ForEach(0..<cards.count){ i in
                 self.cards[i]
