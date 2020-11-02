@@ -47,7 +47,7 @@ public struct Card: View {
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
 public struct Carousel: View {
-    private var cards: [Card]
+    public var cards: [Card]
     @GestureState private var dragState = DragState.inactive
     @State private var carouselLocation = 0
     private let ratio: CGFloat = 0.85,
