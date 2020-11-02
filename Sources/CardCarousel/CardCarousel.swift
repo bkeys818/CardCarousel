@@ -53,11 +53,11 @@ public struct Carousel: View {
     private let ratio: CGFloat = 0.85,
                 cardWidth: CGFloat = 300,
                 offset: CGFloat = 20
-    public init(@CarouselViewBuilder cards: () -> [Card]) {
+    public init(@CarouselViewBuilder _ cards: () -> [Card]) {
         self.cards = cards()
     }
-    public init(cardArray: () -> [Card]) {
-        self.cards = cardArray()
+    public init(cards: [Card]) {
+        self.cards = cards
     }
     private func onDragEnded(drag: DragGesture.Value) {
         let dragThreshold:CGFloat = 200
