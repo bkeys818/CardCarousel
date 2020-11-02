@@ -56,8 +56,8 @@ public struct Carousel: View {
     public init(@CarouselViewBuilder cards: () -> [Card]) {
         self.cards = cards()
     }
-    public init(cardArray: [Card]) {
-        self.cards = cardArray
+    public init(cardArray: () -> [Card]) {
+        self.cards = cardArray()
     }
     private func onDragEnded(drag: DragGesture.Value) {
         let dragThreshold:CGFloat = 200
