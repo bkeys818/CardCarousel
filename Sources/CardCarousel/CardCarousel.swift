@@ -26,8 +26,13 @@ struct LibraryViewContent: LibraryContentProvider {
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
+/// A card that can be used inside a Carousel
 public struct Card: View {
     private var content: AnyView
+    
+    /// Creates an instance displaying whatever view it contains
+
+    /// - Parameter content: The cards in the carousel.
     public init<Content:View>(_ content: () -> Content) {
         self.content = AnyView(content())
     }
@@ -42,22 +47,90 @@ public struct Card: View {
     }
 }
 
+
 @available(iOS 14.0, *)
 @available(macOS, unavailable)
 @available(tvOS, unavailable)
 @available(watchOS, unavailable)
+/// A basic carousel that displaying the provided cards
 public struct Carousel: View {
-    public var cards: [Card]
+    private var cards: [Card]
     @GestureState private var dragState = DragState.inactive
     @State private var carouselLocation = 0
     private let ratio: CGFloat = 0.85,
                 cardWidth: CGFloat = 300,
                 offset: CGFloat = 20
-    public init(@CarouselViewBuilder _ cards: () -> [Card]) {
+    
+    /// Creates an instance with the given cards.
+    ///
+    /// - Parameter content: The cards in the carousel.
+    public init(@CarouselViewBuilder cards: () -> [Card]) {
         self.cards = cards()
     }
-    public init(cards: [Card]) {
-        self.cards = cards
+    
+    private func onDragEnded(drag: DragGesture.Value) {
+        let dragThreshold:CGFloat = 200
+            if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
+                if carouselLocation > 0 {
+                    carouselLocation -= 1
+                }
+            } else if (drag.predictedEndTranslation.width) < (-1 * dragThreshold) || (drag.translation.width) < (-1 * dragThreshold) {
+                if carouselLocation < cards.count - 1 {
+                    carouselLocation += 1
+            }
+        }
+    }
+    
+    public var body: some View {
+        ZStack{
+            ForEach(0..<cards.count){ i in
+                self.cards[i]
+                    .frame(width: cardWidth)
+                    .scaleEffect(carouselLocation == i ? 1 : ratio)
+                    .offset(x: getOffset(from: i))
+                    .animation(.interpolatingSpring(stiffness: 300.0, damping: 30.0, initialVelocity: 10.0))
+            }
+        }.gesture(
+            DragGesture()
+                .updating($dragState) { drag, state, transaction in
+                    state = .dragging(translation: drag.translation)
+                }
+                .onEnded(onDragEnded)
+        )
+    }
+    
+    private func getOffset(from cardIndex: Int) -> CGFloat {
+        let relativePosition = cardIndex - carouselLocation
+        return CGFloat(relativePosition) * (cardWidth + offset)
+    }
+    
+    @_functionBuilder public struct CarouselViewBuilder {
+        public static func buildBlock(_ segments: Card...) -> [Card] {
+            var array = [Card]()
+            segments.forEach { array.append($0) }
+            return array
+        }
+    }
+}
+
+@available(iOS 14.0, *)
+@available(macOS, unavailable)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+/// An infinite carousel that displaying the provided cards in a loop
+public struct InfiniteCarousel: View {
+    private var cards: [Card]
+    @GestureState private var dragState = DragState.inactive
+    @State private var carouselLocation = 0
+    private let ratio: CGFloat = 0.85,
+                cardWidth: CGFloat = 300,
+                offset: CGFloat = 20
+    
+    /// Creates an instance with the given cards.
+    ///
+    /// - Parameter content: The cards in the carousel.
+    public init(@CarouselViewBuilder cards: () -> [Card]) {
+        self.cards = cards()
     }
     private func onDragEnded(drag: DragGesture.Value) {
         let dragThreshold:CGFloat = 200
@@ -144,27 +217,29 @@ public struct Carousel: View {
         }
     }
     
-    private enum DragState {
-        case inactive, dragging(translation: CGSize)
-        
-        var translation: CGSize {
-            switch self {
-            case .inactive: return .zero
-            case .dragging(let translation): return translation
-            }
-        }
-        var isDragging: Bool {
-            switch self {
-            case .inactive: return false
-            case .dragging: return true
-            }
-        }
-    }
     @_functionBuilder public struct CarouselViewBuilder {
         public static func buildBlock(_ segments: Card...) -> [Card] {
             var array = [Card]()
             segments.forEach { array.append($0) }
             return array
+        }
+    }
+}
+
+
+fileprivate enum DragState {
+    case inactive, dragging(translation: CGSize)
+    
+    var translation: CGSize {
+        switch self {
+        case .inactive: return .zero
+        case .dragging(let translation): return translation
+        }
+    }
+    var isDragging: Bool {
+        switch self {
+        case .inactive: return false
+        case .dragging: return true
         }
     }
 }
