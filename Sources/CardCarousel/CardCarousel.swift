@@ -14,9 +14,14 @@ struct LibraryViewContent: LibraryContentProvider {
             matchingSignature: "Card"),
         LibraryItem(
             Carousel{ Card({ EmptyView() }) },
-            title: "Carousel",
+            title: "Basic Carousel",
             category: .layout,
-            matchingSignature: "Carousel")
+            matchingSignature: "Carousel"),
+        LibraryItem(
+            InfiniteCarousel{ Card({ EmptyView() }) },
+            title: "Infinite Carousel",
+            category: .layout,
+            matchingSignature: "Infinite Carousel")
     ] }
 //    @LibraryContentBuilder
 //    func modifiers(base: ModifierBase) -> [LibraryItem]
@@ -108,7 +113,8 @@ public struct Carousel: View {
     
     private func getOffset(from cardIndex: Int) -> CGFloat {
         let relativePosition = cardIndex - carouselLocation
-        return CGFloat(relativePosition) * (cardWidth + offset)
+        let adjustment = (cardWidth-cardWidth*ratio)/2 // Adjustment for center card width
+        return (CGFloat(relativePosition) * (cardWidth * ratio + offset) + CGFloat(relativePosition.signum()) * adjustment)
     }
     
     @_functionBuilder public struct CarouselViewBuilder {
@@ -240,7 +246,6 @@ public struct InfiniteCarousel: View {
         }
     }
 }
-
 
 fileprivate enum DragState {
     case inactive, dragging(translation: CGSize)
