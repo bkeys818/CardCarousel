@@ -63,9 +63,16 @@ public struct Carousel: View {
     
     /// Creates an instance with the given cards.
     ///
-    /// - Parameter content: The cards in the carousel.
-    public init(@CarouselViewBuilder cards: () -> [Card]) {
+    /// - Parameter cards: The cards in the carousel.
+    public init(@CarouselViewBuilder _ cards: () -> [Card]) {
         self.cards = cards()
+    }
+    
+    /// Creates an instance with the given cards.
+    ///
+    /// - Parameter cards: The cards in the carousel.
+    public init(cards: [Card]) {
+        self.cards = cards
     }
     
     private func onDragEnded(drag: DragGesture.Value) {
@@ -128,10 +135,18 @@ public struct InfiniteCarousel: View {
     
     /// Creates an instance with the given cards.
     ///
-    /// - Parameter content: The cards in the carousel.
-    public init(@CarouselViewBuilder cards: () -> [Card]) {
+    /// - Parameter cards: The cards in the carousel.
+    public init(@CarouselViewBuilder _ cards: () -> [Card]) {
         self.cards = cards()
     }
+    
+    /// Creates an instance with the given cards.
+    ///
+    /// - Parameter cards: The cards in the carousel.
+    public init(cards: [Card]) {
+        self.cards = cards
+    }
+    
     private func onDragEnded(drag: DragGesture.Value) {
         let dragThreshold:CGFloat = 200
         if drag.predictedEndTranslation.width > dragThreshold || drag.translation.width > dragThreshold {
