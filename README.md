@@ -13,7 +13,7 @@ For a more detailed description of how to add packages, check out [Apple’s doc
 
 ## Demo
 
-![Demo Image](./Demo/demonstration.gif)
+<img src="./Demo/demonstration.gif" alt="package demonstration" width="250"/>
 
 ## Credit
 
